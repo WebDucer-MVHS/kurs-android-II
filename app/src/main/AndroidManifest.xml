@@ -3,6 +3,8 @@
     package="de.mvhs.android.zeiterfassung">
 
     <!-- Berechtigungen -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -39,6 +41,13 @@
         <activity
             android:name=".IssueActivity"
             android:label="@string/IssueActivityTitle">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.mvhs.android.zeiterfassung.MainActivity" />
+        </activity>
+        <activity
+            android:name=".SensorsActivity"
+            android:label="@string/SonsorsActivitytitle">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.mvhs.android.zeiterfassung.MainActivity" />

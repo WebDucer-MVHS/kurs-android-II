@@ -15,7 +15,12 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/Issues"
+        android:id="@+id/MenuIssues"
         android:title="@string/MenuItemIssues"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/MenuSensors"
+        android:title="@string/MenuItemSensors"
         app:showAsAction="never" />
 </menu>

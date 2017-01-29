@@ -28,6 +28,12 @@
   <string name="IssueActivityTitle">Fehlerliste</string>
   <string name="MenuItemIssues">Fehler</string>
   <string name="MenuItemLoad">Laden</string>
+  <string name="LabelGps">GPS:</string>
+  <string name="LabelLangitude">Länge:</string>
+  <string name="LabelLatitude">Breite:</string>
+  <string name="LabelAccuracy">Genauigkeit:</string>
+  <string name="SonsorsActivitytitle">Sensoren</string>
+  <string name="MenuItemSensors">Sensoren</string>
   <!-- Content Provider AUTHORITY über String-Ressource definieren -->
   <!--<string name="ProviderAuthority">de.mvhs.android.zeiterfassung.provider</string>-->
 </resources>
