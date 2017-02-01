@@ -34,6 +34,14 @@
   <string name="LabelAccuracy">Genauigkeit:</string>
   <string name="SonsorsActivitytitle">Sensoren</string>
   <string name="MenuItemSensors">Sensoren</string>
+  <string name="LabelAcceleration">Beschleunigung:</string>
+  <string name="LabelX">X:</string>
+  <string name="LabelY">Y:</string>
+  <string name="LabelZ">Z:</string>
+  <string name="LabelImages">Bilder</string>
+  <string name="CommandPhoto">Cam</string>
+  <string name="CommandSelectPicture">Gal</string>
+  <string name="LabelResolution">Auflösung:</string>
   <!-- Content Provider AUTHORITY über String-Ressource definieren -->
   <!--<string name="ProviderAuthority">de.mvhs.android.zeiterfassung.provider</string>-->
 </resources>
