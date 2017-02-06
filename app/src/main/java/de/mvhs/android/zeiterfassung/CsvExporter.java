@@ -4,13 +4,23 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
+import android.provider.DocumentsContract;
+import android.provider.DocumentsProvider;
+
+import org.kohsuke.github.GHCommit;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import de.mvhs.android.zeiterfassung.db.TimeDataContract;
 
@@ -18,12 +28,10 @@ import de.mvhs.android.zeiterfassung.db.TimeDataContract;
  * Created by eugen on 09.11.16.
  */
 
-public class CsvExporter extends AsyncTask<Void, Integer, Void> {
+public class CsvExporter extends AsyncTask<Uri, Integer, Void> {
   private final Context _context;
   private ProgressDialog _dialog;
-  private File _exportPath;
-  private File _exportFile;
-  private File _sdCardPath;
+  private Uri _exportFile;
 
   public CsvExporter(Context context) {
     _context = context;
@@ -62,14 +70,15 @@ public class CsvExporter extends AsyncTask<Void, Integer, Void> {
   protected void onCancelled() {
     super.onCancelled();
 
-    // Datei löschen, wenn der Export abgebrochen wurde
-    if (_exportFile != null && _exportFile.exists()) {
-      _exportFile.delete();
-    }
+    DocumentsContract.deleteDocument(_context.getContentResolver(), _exportFile);
   }
 
   @Override
-  protected Void doInBackground(Void... params) {
+  protected Void doInBackground(Uri... file) {
+    if (BuildConfig.IS_PRO){
+      return null;
+    }
+
     // Laden der Daten aus der Datenbank
     Cursor data = _context.getContentResolver().query(
         TimeDataContract.TimeData.CONTENT_URI,
@@ -88,25 +97,6 @@ public class CsvExporter extends AsyncTask<Void, Integer, Void> {
     int count = data.getCount();
     _dialog.setMax(count + 1); // +1 für die Spaltenzeile
 
-    // Verzeichnis der SD-Karte bestimmen
-    _sdCardPath = Environment.getExternalStorageDirectory();
-
-    // Prüfen auf die Schreibrechte / Beschreibbarkeit
-    if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-      return null;
-    }
-
-    // Export-Unterverzeichnis
-    _exportPath = new File(_sdCardPath, "export");
-
-    // Export Datei
-    _exportFile = new File(_exportPath, "TimeDataLog.csv");
-
-    // Prüfen, ob alle Unterverzeichnisse bereits da sind
-    if (!_exportPath.exists()) {
-      _exportPath.mkdirs();
-    }
-
     // Export abbrechen, falls vom Benutzer gewünscht
     if (isCancelled()) {
       return null;
@@ -114,10 +104,13 @@ public class CsvExporter extends AsyncTask<Void, Integer, Void> {
 
     // Writer für die Datei
     BufferedWriter writer = null;
+    OutputStream os = null;
 
     try {
+      _exportFile = file[0];
+      os = _context.getContentResolver().openOutputStream(_exportFile);
       // Writer initialisieren
-      writer = new BufferedWriter(new FileWriter(_exportFile));
+      writer = new BufferedWriter(new OutputStreamWriter(os));
 
       // Lesen der Spalten Namen
       String[] columns = data.getColumnNames();
@@ -142,10 +135,6 @@ public class CsvExporter extends AsyncTask<Void, Integer, Void> {
 
       // Aktuellen Status senden
       publishProgress(1); // Spalten-Zeile
-
-      if (BuildConfig.IS_PRO){
-        return null;
-      }
 
       while (data.moveToNext() && !isCancelled()) {
         // Leeren der Zeileninhalte

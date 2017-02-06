@@ -1,6 +1,7 @@
 package de.mvhs.android.zeiterfassung;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -69,6 +70,9 @@ public class ListDataFragment extends Fragment
   private DateFormat _UI_DATE_TIME_FORMATTER = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
   private IItemSelected _itemSelectedListener = null;
+
+    // Konstanten
+    private final static int _CREATE_FILE_REQUEST = 100;
 
   @Override
   public void onAttach(Context context) {
@@ -186,19 +190,26 @@ public class ListDataFragment extends Fragment
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.MenuExport:
-        // Abfragen, ob Berechtigung vorhanden ist
-        if (ContextCompat.checkSelfPermission(
-            getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
-          // Berechtigung erfragen
-          ActivityCompat.requestPermissions(
-              getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-              _EXPORT_REQUEST_CODE);
-        } else {
-          // Exportieren erlaubt
-          CsvExporter exporter = new CsvExporter(getActivity());
-          exporter.execute();
-        }
+        // SAF zum Speichern der Datei
+          Intent fileIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+          fileIntent.addCategory(Intent.CATEGORY_OPENABLE);
+          fileIntent.setType("text/csv");
+          fileIntent.putExtra(Intent.EXTRA_TITLE, "export.csv");
+          startActivityForResult(fileIntent, _CREATE_FILE_REQUEST);
+
+//        // Abfragen, ob Berechtigung vorhanden ist
+//        if (ContextCompat.checkSelfPermission(
+//            getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//            != PackageManager.PERMISSION_GRANTED) {
+//          // Berechtigung erfragen
+//          ActivityCompat.requestPermissions(
+//              getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//              _EXPORT_REQUEST_CODE);
+//        } else {
+//          // Exportieren erlaubt
+//          CsvExporter exporter = new CsvExporter(getActivity());
+//          exporter.execute();
+//        }
         return true;
 
       case R.id.MenuAddNew:
@@ -287,7 +298,24 @@ public class ListDataFragment extends Fragment
     }
   }
 
-  @Override
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK){
+            return;
+        }
+
+        switch (requestCode){
+            case _CREATE_FILE_REQUEST:
+                Uri filelUri = data.getData();
+                CsvExporter exporter = new CsvExporter(getActivity());
+                exporter.execute(filelUri);
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
     CursorLoader loader = null;
 
