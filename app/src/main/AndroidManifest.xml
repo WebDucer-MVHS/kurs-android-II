@@ -40,6 +40,13 @@
                 android:value="de.mvhs.android.zeiterfassung.ListDataActivity" />
         </activity>
         <activity
+            android:name="de.mvhs.android.zeiterfassung.BindableEditActivity"
+            android:label="@string/EditDataActivityTitle">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.mvhs.android.zeiterfassung.ListDataActivity" />
+        </activity>
+        <activity
             android:name=".IssueActivity"
             android:label="@string/IssueActivityTitle">
             <meta-data

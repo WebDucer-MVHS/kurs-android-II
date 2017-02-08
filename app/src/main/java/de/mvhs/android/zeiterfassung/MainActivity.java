@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
     if (!BuildConfig.IS_PRO){
       MenuItem addMenu = menu.findItem(R.id.MenuAddNew);
-      addMenu.setVisible(false);
+      //addMenu.setVisible(false);
     }
 
     return super.onCreateOptionsMenu(menu);
@@ -127,8 +127,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
 
       case R.id.MenuAddNew:
-        double crash = 100 / 0;
-        Intent addIntent = new Intent(this, EditActivity.class);
+        Intent addIntent = new Intent(this, BindableEditActivity.class);
         addIntent.putExtra(EditFragment.READONLY_KEY, false);
         startActivity(addIntent);
         return true;

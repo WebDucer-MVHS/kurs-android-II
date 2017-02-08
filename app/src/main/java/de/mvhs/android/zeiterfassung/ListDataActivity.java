@@ -29,9 +29,8 @@ public class ListDataActivity extends AppCompatActivity
       ((IChangeContent) detailFragment).onChangeContent(id);
     } else {
       // Intent für die Bearbeitung
-      Intent detailIntent = new Intent(this, EditActivity.class);
-      detailIntent.putExtra(EditFragment.ID_KEY, id);
-      detailIntent.putExtra(EditFragment.READONLY_KEY, false);
+      Intent detailIntent = new Intent(this, BindableEditActivity.class);
+      detailIntent.putExtra(BindableEditActivity.ID_KEY, id);
       startActivity(detailIntent);
     }
   }

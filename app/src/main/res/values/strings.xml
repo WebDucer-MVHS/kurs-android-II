@@ -42,6 +42,7 @@
   <string name="CommandPhoto">Cam</string>
   <string name="CommandSelectPicture">Gal</string>
   <string name="LabelResolution">Auflösung:</string>
+  <string name="SumLabelFormat">Summe: %d min</string>
   <!-- Content Provider AUTHORITY über String-Ressource definieren -->
   <!--<string name="ProviderAuthority">de.mvhs.android.zeiterfassung.provider</string>-->
 </resources>
